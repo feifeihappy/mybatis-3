@@ -57,7 +57,9 @@ public class DefaultParameterHandler implements ParameterHandler {
   public Object getParameterObject() {
     return parameterObject;
   }
-
+  /**
+   * 预编译SQL进行put值
+   */
   @Override
   public void setParameters(PreparedStatement ps) {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());

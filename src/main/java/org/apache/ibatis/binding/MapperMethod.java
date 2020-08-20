@@ -53,8 +53,9 @@ public class MapperMethod {
     this.command = new SqlCommand(config, mapperInterface, method);
     this.method = new MethodSignature(config, mapperInterface, method);
   }
-
+  //execute() 这里是真正执行SQL的地方
   public Object execute(SqlSession sqlSession, Object[] args) {
+    //判断是哪一种SQL语句
     Object result;
     switch (command.getType()) {
       case INSERT: {
@@ -76,7 +77,7 @@ public class MapperMethod {
         if (method.returnsVoid() && method.hasResultHandler()) {
           executeWithResultHandler(sqlSession, args);
           result = null;
-        } else if (method.returnsMany()) {
+        } else if (method.returnsMany()) { //返回值多行 这里调用这个方法
           result = executeForMany(sqlSession, args);
         } else if (method.returnsMap()) {
           result = executeForMap(sqlSession, args);
@@ -144,6 +145,7 @@ public class MapperMethod {
       RowBounds rowBounds = method.extractRowBounds(args);
       result = sqlSession.selectList(command.getName(), param, rowBounds);
     } else {
+      //执行SQL的位置
       result = sqlSession.selectList(command.getName(), param);
     }
     // issue #510 Collections & arrays support

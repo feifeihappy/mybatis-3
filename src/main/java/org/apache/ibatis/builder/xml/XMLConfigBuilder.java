@@ -96,6 +96,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
+    //解析mybatis-config.xml   <configuration>节点
     parseConfiguration(parser.evalNode("/configuration"));
     return configuration;
   }

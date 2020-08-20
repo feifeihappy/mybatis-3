@@ -52,14 +52,17 @@ public class SimpleExecutor extends BaseExecutor {
       closeStatement(stmt);
     }
   }
-
+  //真实数据库查询
   @Override
   public <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
+      //封装，StatementHandler也是MyBatis四大对象之一
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
+      //#{} -> ? 的SQL在这里初始化
       stmt = prepareStatement(handler, ms.getStatementLog());
+      //参数赋值完毕之后，才会真正地查询。
       return handler.query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);

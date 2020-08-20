@@ -37,14 +37,29 @@ class AutoConstructorTest {
   @BeforeAll
   static void setUp() throws Exception {
     // create a SqlSessionFactory
+//    读取 mybatis-config.xml 配置创建 SqlSessionFactory 对象
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/autoconstructor/mybatis-config.xml")) {
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     // populate in-memory database
+//    读取CreateDB.sql文件初始化数据到内存数据库中
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/autoconstructor/CreateDB.sql");
   }
+
+  @Test
+  void fullyPopulatedSubjectAll() {
+    //SqlSession是帮我们操作数据库的对象
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      //获取Mapper
+      final AutoConstructorMapper mapper = sqlSession.getMapper(AutoConstructorMapper.class);
+      final Object subject = mapper.getSubjectAll(1);
+      assertNotNull(subject);
+    }
+  }
+
+
 
   @Test
   void fullyPopulatedSubject() {
